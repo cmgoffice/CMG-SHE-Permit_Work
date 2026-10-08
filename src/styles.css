@@ -1,0 +1,479 @@
+@font-face {
+  font-family: "TH SarabunPSK";
+  src: url("./fonts/THSarabunPSK-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TH SarabunPSK";
+  src: url("./fonts/THSarabunPSK-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TH SarabunPSK";
+  src: url("./fonts/THSarabunPSK-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "TH SarabunPSK";
+  src: url("./fonts/THSarabunPSK-BoldItalic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/**
+ * ใช้เฉพาะบล็อกพิมพ์/ส่งออก WMS และ JSA (ให้ตรงกับ exportToWord)
+ * ไม่ใช้กับเมนูรายการหรือฟอร์มทั่วไป
+ */
+/* ตัวอย่างก่อนพิมพ์/Download — เนื้อหาปกติ 18pt ตามมาตรฐานเอกสารไทย */
+.document-export-preview {
+  font-family: "TH SarabunPSK", "Sarabun", "Cordia New", sans-serif;
+  font-size: 18pt;
+  line-height: 1.35;
+  /* ไม่สืบทอด text-align:center จาก .App */
+  text-align: left;
+}
+
+.document-export-preview table {
+  font-size: inherit;
+}
+
+/* เนื้อหาจาก rich text */
+.document-export-preview .content p {
+  margin: 0.2em 0;
+  line-height: 1.35;
+  font-size: inherit;
+}
+
+.document-export-preview .content p:first-child {
+  margin-top: 0;
+}
+
+.document-export-preview .content p:last-child {
+  margin-bottom: 0;
+}
+
+/* พิมพ์หลายหน้า: หัวซ้ำ — ตาราง HTML จริง (Chrome/Edge ซ้ำ <thead> อัตโนมัติ) */
+table.wms-print-outer-table,
+table.jsa-print-outer-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+table.wms-print-outer-table > thead > tr > th,
+table.jsa-print-outer-table > thead > tr > th {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+/* กำหนดขนาดกระดาษ A4 ตอนพิมพ์ (Chrome/Edge รองรับ named page) */
+@page wms-sheet {
+  size: A4 portrait;
+  margin: 11mm 13mm;
+}
+
+@page jsa-sheet {
+  size: A4 landscape;
+  margin: 9mm 11mm;
+}
+
+.wms-print-document {
+  page: wms-sheet;
+}
+
+.jsa-print-document {
+  page: jsa-sheet;
+}
+
+/* หัว WMS เป็นตาราง — เส้นใต้ให้ตรงพรีวิว */
+.wms-export-title-table {
+  border-bottom: 2px solid #1f2937;
+}
+
+/* แถบหัวข้อ: มีขอบชัดเสมอ — ถ้าปิด "กราฟิกพื้นหลัง" ตอนพิมพ์ยังเห็นโครงเหมือนพรีวิว */
+.wms-export-heading {
+  border: 1px solid #e5e7eb;
+  box-sizing: border-box;
+}
+
+.jsa-header {
+  box-sizing: border-box;
+}
+
+.jsa-header-top-table,
+.jsa-header-meta-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.jsa-header-top-table {
+  margin-bottom: 0.45rem;
+  border-bottom: 1px solid #000;
+}
+
+.jsa-header-top-table td,
+.jsa-header-meta-table td {
+  border: none;
+  vertical-align: middle;
+}
+
+.jsa-header-top-logo {
+  width: 28%;
+  padding: 0 0.75rem 0.45rem 0;
+}
+
+.jsa-header-top-title {
+  padding: 0 0.75rem 0.45rem;
+  text-align: center;
+}
+
+.jsa-header-top-code {
+  width: 18%;
+  padding: 0 0 0.45rem 0.75rem;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.jsa-header-logo {
+  margin-right: auto;
+}
+
+.jsa-header-title {
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.jsa-header-meta-grid {
+  align-items: stretch;
+}
+
+.jsa-header-field {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 3.1rem;
+}
+
+.jsa-header-field > span:first-child,
+.jsa-header-field-label {
+  display: block;
+  margin-bottom: 0.1rem;
+  font-weight: 700;
+  line-height: 1.02;
+}
+
+.jsa-header-field-value {
+  display: block;
+  min-height: 1.55rem;
+  padding: 0 0.15rem 0.1rem;
+  border-bottom: 1px solid #000;
+  line-height: 1.08;
+  word-break: break-word;
+}
+
+.jsa-header-field-value--project {
+  color: #1e40af;
+  font-weight: 700;
+}
+
+.jsa-header-field--ghost::after {
+  content: "";
+  display: block;
+  margin-top: auto;
+  border-bottom: 1px solid #000;
+}
+
+.print-preview-sheet .document-export-preview {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.print-mode-grayscale .document-export-preview,
+html[data-print-color-mode="grayscale"] #printable-wms,
+html[data-print-color-mode="grayscale"] #printable-jsa,
+body[data-print-color-mode="grayscale"] #printable-wms,
+body[data-print-color-mode="grayscale"] #printable-jsa {
+  background: #fff !important;
+  color: #000 !important;
+}
+
+.print-mode-grayscale .document-export-preview *,
+html[data-print-color-mode="grayscale"] #printable-wms *,
+html[data-print-color-mode="grayscale"] #printable-jsa *,
+body[data-print-color-mode="grayscale"] #printable-wms *,
+body[data-print-color-mode="grayscale"] #printable-jsa * {
+  color: #000 !important;
+}
+
+.print-mode-grayscale .document-export-preview img,
+html[data-print-color-mode="grayscale"] #printable-wms img,
+html[data-print-color-mode="grayscale"] #printable-jsa img,
+body[data-print-color-mode="grayscale"] #printable-wms img,
+body[data-print-color-mode="grayscale"] #printable-jsa img {
+  color: initial !important;
+}
+
+.print-mode-grayscale .wms-export-heading,
+.print-mode-grayscale .wms-export-meta-table th,
+.print-mode-grayscale .wms-export-meta-table td,
+.print-mode-grayscale .jsa-header,
+.print-mode-grayscale .jsa-print-grid thead th,
+.print-mode-grayscale .jsa-print-grid tbody,
+.print-mode-grayscale .jsa-print-grid > tbody,
+.print-mode-grayscale .jsa-print-grid .jsa-print-row-group,
+.print-mode-grayscale .jsa-print-grid .jsa-print-row-group td,
+html[data-print-color-mode="grayscale"] .wms-export-heading,
+html[data-print-color-mode="grayscale"] .wms-export-meta-table th,
+html[data-print-color-mode="grayscale"] .wms-export-meta-table td,
+html[data-print-color-mode="grayscale"] #printable-jsa .jsa-header,
+html[data-print-color-mode="grayscale"] #printable-jsa table thead th,
+html[data-print-color-mode="grayscale"] #printable-jsa table tbody,
+html[data-print-color-mode="grayscale"] #printable-jsa .jsa-print-grid > tbody,
+html[data-print-color-mode="grayscale"] #printable-jsa .jsa-print-grid .jsa-print-row-group,
+html[data-print-color-mode="grayscale"] #printable-jsa .jsa-print-grid .jsa-print-row-group td,
+body[data-print-color-mode="grayscale"] .wms-export-heading,
+body[data-print-color-mode="grayscale"] .wms-export-meta-table th,
+body[data-print-color-mode="grayscale"] .wms-export-meta-table td,
+body[data-print-color-mode="grayscale"] #printable-jsa .jsa-header,
+body[data-print-color-mode="grayscale"] #printable-jsa table thead th,
+body[data-print-color-mode="grayscale"] #printable-jsa table tbody,
+body[data-print-color-mode="grayscale"] #printable-jsa .jsa-print-grid > tbody,
+body[data-print-color-mode="grayscale"] #printable-jsa .jsa-print-grid .jsa-print-row-group,
+body[data-print-color-mode="grayscale"] #printable-jsa .jsa-print-grid .jsa-print-row-group td {
+  background: #fff !important;
+  background-color: #fff !important;
+}
+
+.print-mode-grayscale .wms-proj-val,
+html[data-print-color-mode="grayscale"] .wms-proj-val,
+body[data-print-color-mode="grayscale"] .wms-proj-val {
+  color: #000 !important;
+}
+
+@media print {
+  /* หน้าจอใช้ h-screen + overflow-hidden — ตอนพิมพ์ต้องปล่อยความสูง/overflow ไม่ให้ตัดเหลือหน้าเดียว */
+  html,
+  body {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  #root {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  #printable-wms,
+  #printable-jsa {
+    min-height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    /* ให้พิมพ์สีพื้นหลัง/แถบหัวข้อใกล้เคียงพรีวิว (แม้ปิด "กราฟิกพื้นหลัง" บางเบราว์เซอร์ยังยอมพิมพ์เมื่อ exact) */
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* ฟอนต์เอกสารตอนพิมพ์ — ไม่ให้สืบทอด sans จาก .App */
+  #printable-wms.document-export-preview,
+  #printable-jsa.document-export-preview {
+    font-family: "TH SarabunPSK", "Sarabun", "Cordia New", serif !important;
+    font-size: 18pt !important;
+    line-height: 1.35 !important;
+    color: #111827 !important;
+    text-align: left !important;
+  }
+
+  #printable-wms.document-export-preview h1,
+  #printable-wms.document-export-preview h2,
+  #printable-wms.document-export-preview h3,
+  #printable-jsa.document-export-preview h1 {
+    font-family: "TH SarabunPSK", "Sarabun", "Cordia New", serif !important;
+  }
+
+  .wms-export-heading {
+    background-color: #f3f4f6 !important;
+    border: 1px solid #d1d5db !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .wms-export-meta-table th {
+    background-color: #f3f4f6 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* JSA: พื้นหัวกระดาษและแถวตาราง */
+  #printable-jsa .jsa-header {
+    background-color: #fae6d1 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #printable-jsa table thead th {
+    background-color: #fae6d1 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #printable-jsa table tbody {
+    background-color: #e6f2e6 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* เซลล์เนื้อหาตัวกลาง: ให้แบ่งหน้าได้ */
+  #printable-jsa .jsa-print-grid {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    table-layout: fixed !important;
+  }
+
+  #printable-jsa .jsa-print-grid > thead,
+  #printable-jsa .jsa-print-grid > tbody,
+  #printable-jsa .jsa-print-grid .jsa-print-row-group,
+  #printable-jsa .jsa-print-grid .jsa-print-row-group tr,
+  #printable-jsa .jsa-print-grid .jsa-print-row-group td {
+    break-inside: avoid-page !important;
+    page-break-inside: avoid !important;
+  }
+
+  #printable-jsa .jsa-print-grid th,
+  #printable-jsa .jsa-print-grid td {
+    border-color: #000 !important;
+    vertical-align: top !important;
+  }
+
+  #printable-jsa .jsa-print-grid > tbody,
+  #printable-jsa .jsa-print-grid .jsa-print-row-group {
+    background-color: #e6f2e6 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #printable-jsa .jsa-print-grid > tbody td,
+  #printable-jsa .jsa-print-grid .jsa-print-row-group td {
+    border-bottom: 1px dotted #000 !important;
+    background-color: #e6f2e6 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  #printable-jsa .jsa-print-grid thead th {
+    border-bottom: 1px solid #000 !important;
+  }
+
+  table.wms-print-outer-table > tbody > tr > td,
+  table.jsa-print-outer-table > tbody > tr > td {
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+  }
+
+  table.wms-print-outer-table,
+  table.jsa-print-outer-table {
+    table-layout: auto !important;
+    height: auto !important;
+    max-height: none !important;
+  }
+
+  .wms-print-document {
+    max-width: none !important;
+    width: 100% !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  .jsa-print-document {
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  html[data-print-color-mode="grayscale"] .wms-export-heading,
+  html[data-print-color-mode="grayscale"] .wms-export-meta-table th,
+  html[data-print-color-mode="grayscale"] .wms-export-meta-table td,
+  html[data-print-color-mode="grayscale"] #printable-jsa .jsa-header,
+  html[data-print-color-mode="grayscale"] #printable-jsa table thead th,
+  html[data-print-color-mode="grayscale"] #printable-jsa table tbody,
+  html[data-print-color-mode="grayscale"] #printable-jsa .jsa-print-grid > tbody,
+  html[data-print-color-mode="grayscale"] #printable-jsa .jsa-print-grid .jsa-print-row-group,
+  html[data-print-color-mode="grayscale"] #printable-jsa .jsa-print-grid .jsa-print-row-group td,
+  body[data-print-color-mode="grayscale"] .wms-export-heading,
+  body[data-print-color-mode="grayscale"] .wms-export-meta-table th,
+  body[data-print-color-mode="grayscale"] .wms-export-meta-table td,
+  body[data-print-color-mode="grayscale"] #printable-jsa .jsa-header,
+  body[data-print-color-mode="grayscale"] #printable-jsa table thead th,
+  body[data-print-color-mode="grayscale"] #printable-jsa table tbody,
+  body[data-print-color-mode="grayscale"] #printable-jsa .jsa-print-grid > tbody,
+  body[data-print-color-mode="grayscale"] #printable-jsa .jsa-print-grid .jsa-print-row-group,
+  body[data-print-color-mode="grayscale"] #printable-jsa .jsa-print-grid .jsa-print-row-group td {
+    background: #fff !important;
+    background-color: #fff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  html[data-print-color-mode="grayscale"] #printable-wms,
+  html[data-print-color-mode="grayscale"] #printable-jsa,
+  body[data-print-color-mode="grayscale"] #printable-wms,
+  body[data-print-color-mode="grayscale"] #printable-jsa,
+  html[data-print-color-mode="grayscale"] #printable-wms *,
+  html[data-print-color-mode="grayscale"] #printable-jsa *,
+  body[data-print-color-mode="grayscale"] #printable-wms *,
+  body[data-print-color-mode="grayscale"] #printable-jsa * {
+    color: #000 !important;
+  }
+
+  html[data-print-color-mode="grayscale"] #printable-wms img,
+  html[data-print-color-mode="grayscale"] #printable-jsa img,
+  body[data-print-color-mode="grayscale"] #printable-wms img,
+  body[data-print-color-mode="grayscale"] #printable-jsa img {
+    filter: none !important;
+  }
+}
+
+/** ตารางหน้ารายการ — ฟอนต์ระบบ (inherit จาก layout) */
+.list-data-table {
+  table-layout: fixed;
+  font-size: 0.875rem;
+  line-height: 1.2;
+}
+
+.list-data-table th,
+.list-data-table td {
+  height: 2.25rem;
+  padding: 0.35rem 0.625rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .list-data-table th,
+  .list-data-table td {
+    padding: 0.375rem 0.75rem;
+  }
+}
+
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
